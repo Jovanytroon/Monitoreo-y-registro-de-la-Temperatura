@@ -10,7 +10,9 @@ DallasTemperature sensors(&oneWire);
 
 DeviceAddress insideThermometer;
 
-String server = "192.168.1.197";//"www.aprende-web.net";//host
+String RedName = "00_NETWEY_8013811";//Nombre de la Red
+String password = "30037521";//Contraseña
+String server = "192.168.1.197";//Direccion IP de la Red
 
 //variables para enviar al servidor
 String cadena="";
@@ -44,8 +46,7 @@ void setup() {
       Serial.println("ESP8266 en modo Estacion");
       
     //Nos conectamos a una red wifi 
-    SerialESP8266.println("AT+CWJAP=\"00_NETWEY_8013811\",\"30037521\"");
-    //SerialESP8266.println("AT+CWJAP=\"Ciber-Mba\",\"HGWkmbaR54TFsd$$\"");
+    SerialESP8266.println("AT+CWJAP=\""+RedName+"\",\""+password+"\"");
     Serial.println("Conectandose a la red ...");
     SerialESP8266.setTimeout(10000); //Aumentar si demora la conexion
     if(SerialESP8266.find("OK"))
@@ -80,7 +81,7 @@ void loop() {
   
       //Nos conectamos con el servidor:
       
-      SerialESP8266.println("AT+CIPSTART=\"TCP\",\"192.168.1.197\",55000");
+      SerialESP8266.println("AT+CIPSTART=\"TCP\",\""+server+"\",55000");
       if( SerialESP8266.find("OK"))
       {  
           Serial.println();
@@ -91,8 +92,8 @@ void loop() {
           //Armamos el encabezado de la peticion http
           String peticionHTTP= "GET /";
           peticionHTTP=peticionHTTP+String(tempC)+" HTTP/1.1\r\n";
-          peticionHTTP=peticionHTTP+"Host: 192.168.1.197\r\nConnection: close\r\n\r\n";//"Host: www.aprende-web.netrnrn";
-          //String peticionHTTP=String(tempC);
+          peticionHTTP=peticionHTTP+"Host: "+server+"\r\nConnection: close\r\n\r\n";
+          
     
           //Enviamos el tamaño en caracteres de la peticion http:  
           SerialESP8266.print("AT+CIPSEND=");
@@ -123,7 +124,7 @@ void loop() {
                       cadena.concat(c);  //guardamos la respuesta en el string "cadena"
                   }
                   //finalizamos si la respuesta es mayor a 500 caracteres
-                  if(cadena.length()>500) //Pueden aumentar si tenen suficiente espacio en la memoria
+                  if(cadena.length()>500) //Pueden aumentar si tienen suficiente espacio en la memoria
                   {
                     Serial.println("La respuesta a excedido el tamaño maximo");
                     
@@ -164,8 +165,7 @@ void loop() {
       Serial.println("ESP8266 en modo Estacion");
       
     //Nos conectamos a una red wifi 
-    SerialESP8266.println("AT+CWJAP=\"00_NETWEY_8013811\",\"30037521\"");
-    //SerialESP8266.println("AT+CWJAP=\"Ciber-Mba\",\"HGWkmbaR54TFsd$$\"");
+    SerialESP8266.println("AT+CWJAP=\""+RedName+"\",\""+password+"\"");
     Serial.println("Conectandose a la red ...");
     SerialESP8266.setTimeout(10000); //Aumentar si demora la conexion
     if(SerialESP8266.find("OK"))
@@ -179,32 +179,9 @@ void loop() {
       Serial.println("Multiconexiones deshabilitadas");
     
       }
-
-        
   //-------------------------------------------------------------------------------
-
-  //delay(7000); //pausa de 10seg antes de conectarse nuevamente al servidor (opcional)
 }
-void printTemperature(DeviceAddress deviceAddress)
-{
-  // method 1 - slower
-  //Serial.print("Temp C: ");
-  //Serial.print(sensors.getTempC(deviceAddress));
-  //Serial.print(" Temp F: ");
-  //Serial.print(sensors.getTempF(deviceAddress)); // Makes a second call to getTempC and then converts to Fahrenheit
 
-  // method 2 - faster
-  float tempC = sensors.getTempC(deviceAddress);
-  if(tempC == DEVICE_DISCONNECTED_C) 
-  {
-    Serial.println("Error: Could not read temperature data");
-    return;
-  }
-  Serial.print("Temp C: ");
-  Serial.print(tempC);
-  /*Serial.print(" Temp F: ");
-  Serial.println(DallasTemperature::toFahrenheit(tempC));*/ // Converts tempC to Fahrenheit
-}
 void printAddress(DeviceAddress deviceAddress)
 {
   for (uint8_t i = 0; i < 8; i++)
