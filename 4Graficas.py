@@ -62,16 +62,17 @@ def GetData(out_data,out_data2,out_data3,out_data4):
         client, addr = s.accept()
         content=client.recv(1024)
         bite=content.decode('utf-8')
-        temp1=bite.split('/')[1][0:-23]
-        temp2=bite.split('/')[1][-22:-17]
-        temp3=bite.split('/')[1][-16:-11]
-        temp4=bite.split('/')[1][-10:-5]
-        print(str(temp1)+", "+str(temp2)+", "+str(temp3)+", "+str(temp4)) 
-        out_data[1].append(float(temp1))
-        out_data2[1].append(float(temp2))
-        out_data3[1].append(float(temp3))
-        out_data4[1].append(float(temp4))
-        client.sendall(content)
+        if (bite.split('/'))==3:
+            temp1=bite.split('/')[1][0:-23]
+            temp2=bite.split('/')[1][-22:-17]
+            temp3=bite.split('/')[1][-16:-11]
+            temp4=bite.split('/')[1][-10:-5]
+            print(str(temp1)+", "+str(temp2)+", "+str(temp3)+", "+str(temp4)) 
+            out_data[1].append(float(temp1))
+            out_data2[1].append(float(temp2))
+            out_data3[1].append(float(temp3))
+            out_data4[1].append(float(temp4))
+            client.sendall(content)
         client.close()
 
 def update1(i,hl1,dato):
