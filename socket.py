@@ -38,7 +38,7 @@ def update_line(num,hl,data):
     hl.set_data(range(len(data[1])), data[1])
     return hl,
 
-line_ani=animation.FuncAnimation(fig,update_line,fargs=(hl,gData),interval=50,blit=False)
+line_ani=animation.FuncAnimation(fig,update_line,fargs=(hl,gData),interval=50,blit=True)
 
 dataCollector=threading.Thread(target=GetData,args=(gData,))
 dataCollector.start()
